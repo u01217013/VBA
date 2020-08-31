@@ -1,0 +1,974 @@
+Private Sub CommandButton1_Click()
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    Application.DisplayStatusBar = False
+    ActiveSheet.DisplayPageBreaks = False
+    Fname = Application.GetOpenFilename '開啟檔案總管
+    Workbooks.Open Fname '打開檔案總管選擇的資料
+    ActiveSheet.Copy After:=ThisWorkbook.Sheets("總表") '複製當前的工作表所以內容
+    ActiveSheet.name = "原始資料"
+    Sheets("原始資料").Select '插入空白欄
+    Set shh = ActiveSheet
+    Dim kk As Long
+    kk = shh.Range("E2", shh.Range("E2").End(xlDown)).Rows.Count
+    ActiveSheet.Columns("A:A").Select
+    Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白欄
+    ActiveSheet.Range("A2") = "=RC[2]&Right(RC[8],2)" '以下為原始資料公式
+    ActiveSheet.Range("A2").Select
+    Selection.Copy
+    ActiveSheet.Range("A2:A" & kk + 1).Select
+    Selection.PasteSpecial                                           '以上為整欄貼上原始資料
+    Selection.EntireColumn.Hidden = True
+    Sheets("總表").Select
+    Application.ScreenUpdating = True
+    Application.DisplayAlerts = True
+    Application.DisplayStatusBar = True
+    ActiveSheet.DisplayPageBreaks = True
+    Workbooks(2).Close SaveChanges:=False
+End Sub
+Private Sub CommandButton2_Click()
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    Application.DisplayStatusBar = False
+    ActiveSheet.DisplayPageBreaks = False
+   Dim Time0
+    Time0 = Timer
+   Worksheets.Add(After:=Worksheets("原始資料")).name = "異常分析-個人進出"
+   Worksheets.Add(After:=Worksheets("異常分析-個人進出")).name = "異常分析-部門進出"
+   Worksheets.Add(After:=Worksheets("異常分析-部門進出")).name = "異常分析-測試"
+   Worksheets.Add(After:=Worksheets("異常分析-測試")).name = "計算用"
+   Sheets("原始資料").Select
+   k = Sheets("原始資料").Range("B1", Sheets("原始資料").Range("B1").End(xlDown)).Rows.Count
+   Sheets("原始資料").Range("C1:D" & k + 1, "H:H").Select
+   Selection.Copy
+   Sheets("計算用").Select
+   Selection.PasteSpecial
+   Sheets("計算用").Columns("C:E").Select
+   Selection.Delete Shift:=xlToLeft
+For i = k To 1 Step -1
+   If Sheets("計算用").Cells(i, 1) = "" Then 'i隨循環的次數而增大，為列數
+   Sheets("計算用").Rows(i).Delete
+   End If
+Next
+   Sheets("計算用").Columns("A:C").Select
+   Application.CutCopyMode = False
+   ActiveSheet.Range("$A$1:$C" & k + 1).RemoveDuplicates Columns:=1, Header:=xlNo
+   kk = Sheets("計算用").Range("A1", Sheets("計算用").Range("A1").End(xlDown)).Rows.Count
+   Sheets("計算用").Range("D1:E1").Value = "代碼"
+   Sheets("計算用").Range("D2:D" & kk).Value = "=RC[-3]&right(總表!R14C2,2)"
+   Sheets("計算用").Range("E2:E" & kk).Value = "=RC[-4]&right(總表!R15C2,2)"
+   Sheets("計算用").Range("D2:E" & kk).Select
+   Selection.Copy
+   Sheets("計算用").Range("D2:E" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("計算用").Range("F2:F" & kk).Value = "=VLOOKUP(RC[-3],總表!C[-3]:C[-2],2,0)"
+   Sheets("計算用").Range("F2:F" & kk).Select
+   Selection.Copy
+   Sheets("計算用").Range("C2:C" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("計算用").Range("F2:F" & kk).Delete
+   Sheets("計算用").Range("A1:C" & kk).Select
+   Selection.Copy
+   Sheets("異常分析-個人進出").Select
+   Selection.PasteSpecial
+   Sheets("異常分析-個人進出").Range("D1").Value = "進入次數"
+   Sheets("異常分析-個人進出").Range("E1").Value = "外出次數"
+   Sheets("異常分析-個人進出").Range("F1").Value = "失敗次數"
+   Sheets("異常分析-個人進出").Range("G1").Value = "是否異常"
+   Sheets("異常分析-個人進出").Range("D2:D" & kk).Value = "=COUNTIF(原始資料!C[-3],計算用!RC)"
+   Sheets("異常分析-個人進出").Range("E2:E" & kk).Value = "=COUNTIF(原始資料!C[-4],計算用!RC)"
+   Sheets("異常分析-個人進出").Range("D2:E" & kk).Select
+   Selection.Copy
+   Sheets("異常分析-個人進出").Range("D2:E" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("A2:A" & k).Value = "=RC[2]&right(RC[5],4)"
+   Sheets("計算用").Select
+   Sheets("計算用").Range("F1").Value = "失敗代碼"
+   Sheets("計算用").Range("F2:F" & kk).Value = "=RC[-5]&right(總表!R10C2,4)"
+   Sheets("計算用").Range("F2:F" & kk).Select
+   Selection.Copy
+   Sheets("計算用").Range("F2:F" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("F2:F" & kk).Value = "=COUNTIF(原始資料!C[-5],計算用!RC)"
+   Sheets("異常分析-個人進出").Range("F2:F" & kk).Select
+   Selection.Copy
+   Sheets("異常分析-個人進出").Range("F2:F" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-個人進出").Range("G2:G" & kk).Value = "=IF(RC[-3]-RC[-1]=RC[-2],""否"",""是"")"
+   Sheets("異常分析-個人進出").Range("G2:G" & kk).Select
+   Selection.FormatConditions.Add Type:=xlExpression, Formula1:="=$G2=""是"""
+   Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+   Sheets("計算用").Select
+   Sheets("計算用").Range("G1").Value = "部門進入次數"
+   Sheets("計算用").Range("H1").Value = "部門外出次數"
+   Sheets("計算用").Range("G2:G" & kk).Value = "=RC[-4]&right(總表!R14C2,2)"
+   Sheets("計算用").Range("H2:H" & kk).Value = "=RC[-5]&right(總表!R15C2,2)"
+   Sheets("計算用").Range("G2:H" & kk).Select
+   Selection.Copy
+   Sheets("計算用").Range("G2:H" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("Q1").Value = "部門名稱"
+   Sheets("原始資料").Range("Q2:Q" & k).Value = "=VLOOKUP(RC[-9],總表!C[-14]:C[-13],2,0)"
+   Sheets("原始資料").Range("Q2:Q" & k).Select
+   Selection.Copy
+   Sheets("原始資料").Range("Q2:Q" & k).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("原始資料").Range("A2:A" & k).Value = "=RC[16]&right(RC[8],2)"
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Range("A1:A96").Value = "=總表!R[6]C[3]"
+   Sheets("異常分析-部門進出").Range("A1:A96").Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Range("A1:A96").Select
+   Selection.PasteSpecial xlPasteValues
+   kkk = Sheets("異常分析-部門進出").Range("A1", Sheets("異常分析-部門進出").Range("A1").End(xlDown)).Rows.Count
+   Sheets("異常分析-部門進出").Range("B1").Value = "部門進入"
+   Sheets("異常分析-部門進出").Range("C1").Value = "部門外出"
+   Sheets("異常分析-部門進出").Range("D1").Value = "部門失敗"
+   Sheets("異常分析-部門進出").Range("E1").Value = "是否異常"
+   Sheets("異常分析-部門進出").Range("B2:B" & kkk).Value = "=COUNTIF(原始資料!C[-1],RC[-1]&RIGHT(總表!R14C2,2))"
+   Sheets("異常分析-部門進出").Range("C2:C" & kkk).Value = "=COUNTIF(原始資料!C[-2],RC[-2]&RIGHT(總表!R15C2,2))"
+   Sheets("異常分析-部門進出").Range("B2:C" & kkk).Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Range("B2:C" & kkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("A2:A" & k).Value = "=RC[16]&right(RC[5],4)"
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Range("D2:D" & kkk).Value = "=COUNTIF(原始資料!C[-3],RC[-3]&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("D2:D" & kkk).Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Range("D2:D" & kkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-部門進出").Range("E2:E" & kkk).Value = "=IF(RC[-3]-RC[-1]=RC[-2],""否"",""是"")"
+   Sheets("異常分析-部門進出").Range("E2:E" & kkk).Select
+   Selection.FormatConditions.Add Type:=xlExpression, Formula1:="=$E2=""是"""
+   Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+   Sheets("總表").Select
+   Sheets("總表").Range("A8:A24").Select
+   Selection.Copy
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("H1").Select
+   Selection.PasteSpecial Paste:=xlPasteAll, Operation:=xlNone, SkipBlanks:= _
+        False, Transpose:=True
+   Sheets("總表").Select
+   Sheets("總表").Range("A8:A24").Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Range("F1").Select
+   Selection.PasteSpecial Paste:=xlPasteAll, Operation:=xlNone, SkipBlanks:= _
+        False, Transpose:=True
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("A2:A" & k).Value = "=RC[2]&RC[1]&RIGHT(RC[5],4)"
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("H2:H" & kk).Value = "=COUNTIF(原始資料!C[-7],RC[-7]&R1C8&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("I2:I" & kk).Value = "=COUNTIF(原始資料!C[-8],RC[-8]&R1C9&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("J2:J" & kk).Value = "=COUNTIF(原始資料!C[-9],RC[-9]&R1C10&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("K2:K" & kk).Value = "=COUNTIF(原始資料!C[-10],RC[-10]&R1C11&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("L2:L" & kk).Value = "=COUNTIF(原始資料!C[-11],RC[-11]&R1C12&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("M2:M" & kk).Value = "=COUNTIF(原始資料!C[-12],RC[-12]&R1C13&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("N2:N" & kk).Value = "=COUNTIF(原始資料!C[-13],RC[-13]&R1C14&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("O2:O" & kk).Value = "=COUNTIF(原始資料!C[-14],RC[-14]&R1C15&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("P2:P" & kk).Value = "=COUNTIF(原始資料!C[-15],RC[-15]&R1C16&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("Q2:Q" & kk).Value = "=COUNTIF(原始資料!C[-16],RC[-16]&R1C17&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("R2:R" & kk).Value = "=COUNTIF(原始資料!C[-17],RC[-17]&R1C18&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("S2:S" & kk).Value = "=COUNTIF(原始資料!C[-18],RC[-18]&R1C19&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("T2:T" & kk).Value = "=COUNTIF(原始資料!C[-19],RC[-19]&R1C20&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("U2:U" & kk).Value = "=COUNTIF(原始資料!C[-20],RC[-20]&R1C21&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("V2:V" & kk).Value = "=COUNTIF(原始資料!C[-21],RC[-21]&R1C22&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("W2:W" & kk).Value = "=COUNTIF(原始資料!C[-22],RC[-22]&R1C23&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("X2:X" & kk).Value = "=COUNTIF(原始資料!C[-23],RC[-23]&R1C24&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-個人進出").Range("H2:X" & kk).Select
+   Selection.Copy
+   Sheets("異常分析-個人進出").Range("H2:X" & kk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("A2:A" & k).Value = "=RC[16]&RC[1]&RIGHT(RC[5],4)"
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Range("F2:F" & kkk).Value = "=COUNTIF(原始資料!C[-5],RC[-5]&R1C6&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("G2:G" & kkk).Value = "=COUNTIF(原始資料!C[-6],RC[-6]&R1C7&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("H2:H" & kkk).Value = "=COUNTIF(原始資料!C[-7],RC[-7]&R1C8&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("I2:I" & kkk).Value = "=COUNTIF(原始資料!C[-8],RC[-8]&R1C9&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("J2:J" & kkk).Value = "=COUNTIF(原始資料!C[-9],RC[-9]&R1C10&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("K2:K" & kkk).Value = "=COUNTIF(原始資料!C[-10],RC[-10]&R1C11&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("L2:L" & kkk).Value = "=COUNTIF(原始資料!C[-11],RC[-11]&R1C12&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("M2:M" & kkk).Value = "=COUNTIF(原始資料!C[-12],RC[-12]&R1C13&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("N2:N" & kkk).Value = "=COUNTIF(原始資料!C[-13],RC[-13]&R1C14&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("O2:O" & kkk).Value = "=COUNTIF(原始資料!C[-14],RC[-14]&R1C15&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("P2:P" & kkk).Value = "=COUNTIF(原始資料!C[-15],RC[-15]&R1C16&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("Q2:Q" & kkk).Value = "=COUNTIF(原始資料!C[-16],RC[-16]&R1C17&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("R2:R" & kkk).Value = "=COUNTIF(原始資料!C[-17],RC[-17]&R1C18&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("S2:S" & kkk).Value = "=COUNTIF(原始資料!C[-18],RC[-18]&R1C19&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("T2:T" & kkk).Value = "=COUNTIF(原始資料!C[-19],RC[-19]&R1C20&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("U2:U" & kkk).Value = "=COUNTIF(原始資料!C[-20],RC[-20]&R1C21&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("V2:V" & kkk).Value = "=COUNTIF(原始資料!C[-21],RC[-21]&R1C22&RIGHT(總表!R10C2,4))"
+   Sheets("異常分析-部門進出").Range("F2:V" & kkk).Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Range("F2:V" & kkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("A1:X" & kk).Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Range("A1:V" & kkk).Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("H2").Select
+   ActiveWindow.FreezePanes = True
+   Sheets("異常分析-個人進出").Cells.Select
+   Sheets("異常分析-個人進出").Cells.EntireColumn.AutoFit
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Columns("B:B").Select
+   Selection.Insert Shift:=xlToRight, CopyOrigin:=xlFormatFromLeftOrAbove
+   Sheets("異常分析-部門進出").Range("B1").Value = "部門人數"
+   Sheets("異常分析-部門進出").Range("B2:B" & kkk).Value = "=COUNTIF('異常分析-個人進出'!C[1],RC[-1])"
+   Sheets("異常分析-部門進出").Range("B2:B" & kkk).Select
+   Selection.Copy
+   Sheets("異常分析-部門進出").Range("B2:B" & kkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-部門進出").Range("G2").Select
+   ActiveWindow.FreezePanes = True
+   Sheets("異常分析-部門進出").Cells.Select
+   Sheets("異常分析-部門進出").Cells.EntireColumn.AutoFit
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("G2:G" & k).Select
+   Selection.NumberFormatLocal = "0.00_);[Red](0.00)"
+   Selection.NumberFormatLocal = "0.0_);[Red](0.0)"
+   Selection.NumberFormatLocal = "0_);[Red](0)"
+   Sheets("原始資料").Range("S2:S" & k).Value = "=LEFT(RC[-12],8)"
+   Sheets("原始資料").Range("R2:R" & k).Value = "=RIGHT(RC[-11],6)"
+   Sheets("異常分析-測試").Select
+   Sheets("異常分析-測試").Range("A1").Value = "部門名稱"
+   Sheets("異常分析-測試").Range("B1").Value = "員工號"
+   Sheets("異常分析-測試").Range("C1").Value = "姓名"
+   Sheets("異常分析-測試").Range("D1").Value = "卡機位置"
+   Sheets("異常分析-測試").Range("E1").Value = "日期"
+   Sheets("異常分析-測試").Range("F1").Value = "時間"
+   Sheets("異常分析-測試").Range("G1").Value = "手環測試值"
+   Sheets("異常分析-測試").Range("H1").Value = "左腳測試值"
+   Sheets("異常分析-測試").Range("I1").Value = "右腳測試值"
+For i = 1 To k
+   If Sheets("原始資料").Cells(i, 6).Value = "1 測試失敗" Then 'i隨循環的次數而增大，為列數
+   Sheets("異常分析-測試").Cells(i + 1, 1).Value = Sheets("原始資料").Cells(i, 17).Value
+   Sheets("異常分析-測試").Cells(i + 1, 2).Value = Sheets("原始資料").Cells(i, 3).Value
+   Sheets("異常分析-測試").Cells(i + 1, 3).Value = Sheets("原始資料").Cells(i, 4).Value
+   Sheets("異常分析-測試").Cells(i + 1, 4).Value = Sheets("原始資料").Cells(i, 2).Value
+   Sheets("異常分析-測試").Cells(i + 1, 5).Value = Sheets("原始資料").Cells(i, 19).Value
+   Sheets("異常分析-測試").Cells(i + 1, 6).Value = Sheets("原始資料").Cells(i, 18).Value
+   Sheets("異常分析-測試").Cells(i + 1, 7).Value = Sheets("原始資料").Cells(i, 12).Value
+   Sheets("異常分析-測試").Cells(i + 1, 8).Value = Sheets("原始資料").Cells(i, 15).Value
+   Sheets("異常分析-測試").Cells(i + 1, 9).Value = Sheets("原始資料").Cells(i, 16).Value
+   End If
+Next
+   Sheets("異常分析-測試").Select
+    Sheets("異常分析-測試").Cells.Replace What:="#N/A", Replacement:="無", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+For ii = k To 1 Step -1
+   If Sheets("異常分析-測試").Cells(ii, 1) = "" Then 'i隨循環的次數而增大，為列數
+   Sheets("異常分析-測試").Rows(ii).Delete
+   End If
+Next
+   Sheets("異常分析-測試").Select
+   kkkk = Sheets("異常分析-測試").Range("A1", Sheets("異常分析-測試").Range("A1").End(xlDown)).Rows.Count
+   Sheets("異常分析-測試").Range("A1:I" & kkkk).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+   Sheets("異常分析-測試").Range("J2:J" & kkkk).Value = "=TEXT(RC[-4],""000000"")"
+   Sheets("異常分析-測試").Range("k2:k" & kkkk).Value = "=LEFT(RC[-1],2)&"":""&MID(RC[-1],3,2)&"":""&RIGHT(RC[-1],2)"
+   Sheets("異常分析-測試").Range("k2:k" & kkkk).Select
+   Selection.Copy
+   Sheets("異常分析-測試").Range("F2:F" & kkkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-測試").Columns("J:K").Select
+   Selection.ClearContents
+   Sheets("異常分析-測試").Range("G2:I" & kkkk).Select
+   Selection.Copy
+   Sheets("異常分析-測試").Range("M2:O" & kkkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-測試").Columns("G:I").Select
+    Selection.Replace What:="HIGH", Replacement:="HI", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Selection.Replace What:="M", Replacement:="*1000000", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Selection.Replace What:="G", Replacement:="*1000000000", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+    Selection.Replace What:="K", Replacement:="*1000", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+   Sheets("異常分析-測試").Range("J2:J" & kkkk).Value = "=LEFT(RC[-3],FIND(""*"",RC[-3],1)-1)*RIGHT(RC[-3],(LEN(RC[-3])-FIND(""*"",RC[-3],1)))"
+   Sheets("異常分析-測試").Range("k2:k" & kkkk).Value = "=LEFT(RC[-3],FIND(""*"",RC[-3],1)-1)*RIGHT(RC[-3],(LEN(RC[-3])-FIND(""*"",RC[-3],1)))"
+   Sheets("異常分析-測試").Range("L2:L" & kkkk).Value = "=LEFT(RC[-3],FIND(""*"",RC[-3],1)-1)*RIGHT(RC[-3],(LEN(RC[-3])-FIND(""*"",RC[-3],1)))"
+   Sheets("異常分析-測試").Range("J2:L" & kkkk).Select
+   Selection.Copy
+   Sheets("異常分析-測試").Range("J2:L" & kkkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-測試").Columns("J:L").Select
+    Selection.Replace What:="#VALUE!", Replacement:="0", LookAt:=xlPart, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+For iii = 2 To kkkk
+If Sheets("異常分析-測試").Cells(iii, 10).Value > 35000000 Then
+   Sheets("異常分析-測試").Cells(iii, 7).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+ElseIf Sheets("異常分析-測試").Cells(iii, 10).Value < 1000000 Then
+    Sheets("異常分析-測試").Cells(iii, 7).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+Else
+End If
+Next
+For iiii = 2 To kkkk
+   If Sheets("異常分析-測試").Cells(iiii, 11).Value > 1000000000 Then 'i隨循環的次數而增大，為列數
+   Sheets("異常分析-測試").Cells(iiii, 8).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+    ElseIf Sheets("異常分析-測試").Cells(iiii, 11).Value < 100000 Then
+    Sheets("異常分析-測試").Cells(iiii, 8).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+    Else
+    End If
+Next
+For iiii = 2 To kkkk
+   If Sheets("異常分析-測試").Cells(iiii, 12).Value > 1000000000 Then 'i隨循環的次數而增大，為列數
+   Sheets("異常分析-測試").Cells(iiii, 9).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+    ElseIf Sheets("異常分析-測試").Cells(iiii, 12).Value < 100000 Then
+    Sheets("異常分析-測試").Cells(iiii, 9).Select
+     With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+     End With
+    Else
+    End If
+Next
+   Sheets("異常分析-測試").Range("M2:O" & kkkk).Select
+   Selection.Copy
+   Sheets("異常分析-測試").Range("G2:I" & kkkk).Select
+   Selection.PasteSpecial xlPasteValues
+   Sheets("異常分析-測試").Range("J2:O" & kkkk).Select
+   Selection.ClearContents
+   Sheets("異常分析-測試").Range("A1:I1").Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.Font.Bold = True
+    Sheets("異常分析-測試").Range("E2:I" & kkkk).Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+   Sheets("異常分析-測試").Cells.Select
+   Sheets("異常分析-測試").Cells.EntireColumn.AutoFit
+   Worksheets.Add(After:=Worksheets("原始資料")).name = "圖表分析"
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("A" & kk + 1).Value = "出入口失敗次數合計"
+   Sheets("異常分析-個人進出").Range("A" & kk + 1 & ":" & "G" & kk + 1).Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+    Selection.Merge
+   Sheets("異常分析-個人進出").Cells(kk + 1, 8).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("H2:H" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 9).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("I2:I" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 10).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("J2:J" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 11).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("K2:k" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 12).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("L2:L" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 13).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("M2:M" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 14).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("N2:N" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 15).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("O2:O" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 16).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("P2:P" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 17).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("Q2:Q" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 18).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("R2:R" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 19).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("S2:S" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 20).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("T2:T" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 21).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("U2:U" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 22).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("V2:V" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 23).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("W2:W" & kk))
+   Sheets("異常分析-個人進出").Cells(kk + 1, 24).Value = Application.WorksheetFunction.Sum(Sheets("異常分析-個人進出").Range("X2:X" & kk))
+   Sheets("異常分析-個人進出").Select
+   Sheets("異常分析-個人進出").Range("A" & kk + 1 & ":" & "X" & kk + 1).Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = xlAutomatic
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+    End With
+   Sheets("異常分析-個人進出").Columns("F:F").Select                                               '做數據大小排序
+    ActiveWorkbook.Worksheets("異常分析-個人進出").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("異常分析-個人進出").Sort.SortFields.Add Key:=Range("F1"), _
+        SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("異常分析-個人進出").Sort
+        .SetRange Range("A2:X" & kk + 1)
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+   Sheets("異常分析-部門進出").Select
+   Sheets("異常分析-部門進出").Columns("E:E").Select
+    ActiveWorkbook.Worksheets("異常分析-部門進出").Sort.SortFields.Clear
+    ActiveWorkbook.Worksheets("異常分析-部門進出").Sort.SortFields.Add Key:=Range("E1"), _
+        SortOn:=xlSortOnValues, Order:=xlDescending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("異常分析-部門進出").Sort
+        .SetRange Range("A2:W" & kkk + 1)
+        .Header = xlNo
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With                                                                        '做數據大小排序
+   Sheets("異常分析-測試").Select
+   Sheets("異常分析-測試").Range("A" & kkkk + 1).Value = "失敗次數"
+   Sheets("異常分析-測試").Range("A" & kkkk + 1 & ":" & "F" & kkkk + 1).Select
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+        .MergeCells = False
+    End With
+   Selection.Merge
+  Dim allrowscount As Integer
+  allrowscount = ActiveSheet.UsedRange.Rows.Count
+  Sheets("異常分析-測試").Rows("1:1").Select
+    Selection.AutoFilter
+    ActiveSheet.Range("A1:O" & kkkk).AutoFilter Field:=7, Criteria1:=RGB(255, _
+        255, 0), Operator:=xlFilterCellColor
+   Sheets("異常分析-測試").Range("A2:A" & allrowscount).SpecialCells(xlCellTypeVisible).Select
+   kkkkk = Selection.Cells.Count
+   Sheets("異常分析-測試").Range("G" & kkkk + 1).Value = kkkkk
+   Sheets("異常分析-測試").Rows("1:1").Select
+    Selection.AutoFilter
+    Selection.AutoFilter
+    ActiveSheet.Range("A1:O" & kkkk).AutoFilter Field:=8, Criteria1:=RGB(255, _
+        255, 0), Operator:=xlFilterCellColor
+   Sheets("異常分析-測試").Range("A2:A" & allrowscount).SpecialCells(xlCellTypeVisible).Select
+   kkkkkk = Selection.Cells.Count
+   Sheets("異常分析-測試").Range("H" & kkkk + 1).Value = kkkkkk
+   Sheets("異常分析-測試").Rows("1:1").Select
+    Selection.AutoFilter
+    Selection.AutoFilter
+    ActiveSheet.Range("A1:O" & kkkk).AutoFilter Field:=9, Criteria1:=RGB(255, _
+        255, 0), Operator:=xlFilterCellColor
+   Sheets("異常分析-測試").Range("A2:A" & allrowscount).SpecialCells(xlCellTypeVisible).Select
+   kkkkkkk = Selection.Cells.Count
+   Sheets("異常分析-測試").Range("I" & kkkk + 1).Value = kkkkkkk
+   Sheets("異常分析-測試").Rows("1:1").Select
+    Selection.AutoFilter
+  Sheets("異常分析-測試").Range("A" & kkkk + 1 & ":" & "I" & kkkk + 1).Select
+  Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlMedium
+    End With
+    Selection.Borders(xlInsideHorizontal).LineStyle = xlNone
+    With Selection
+        .HorizontalAlignment = xlGeneral
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+    End With
+    With Selection
+        .HorizontalAlignment = xlCenter
+        .VerticalAlignment = xlCenter
+        .WrapText = False
+        .Orientation = 0
+        .AddIndent = False
+        .IndentLevel = 0
+        .ShrinkToFit = False
+        .ReadingOrder = xlContext
+    End With
+   Sheets("原始資料").Select
+   Sheets("原始資料").Range("R2:S" & k).Select
+   Selection.ClearContents
+   Sheets("異常分析-個人進出").Select
+    Sheets("異常分析-個人進出").Range("H1:X1," & "H" & kk + 1 & ":" & "X" & kk + 1).Select
+    Sheets("異常分析-個人進出").Range("H" & kk + 1).Activate
+    Sheets("異常分析-個人進出").Shapes.AddChart.Select
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveChart.ChartArea.Copy
+    Sheets("圖表分析").Select
+    ActiveSheet.Paste
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveSheet.Shapes("Chart 1").ScaleWidth 1.4666666667, msoFalse, _
+        msoScaleFromTopLeft
+    ActiveSheet.Shapes("Chart 1").ScaleHeight 1.1631944444, msoFalse, _
+        msoScaleFromTopLeft
+    ActiveChart.ApplyLayout (1)
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveChart.ChartTitle.Select
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "出入口異常次數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.ChartTitle.Text = "出入口異常次數"
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "出入口異常次數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.Legend.Select
+    Selection.Delete
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveSheet.Shapes("Chart 1").ScaleWidth 1.0894886364, msoFalse, _
+        msoScaleFromTopLeft
+    ActiveSheet.ChartObjects("Chart 1").Activate
+    ActiveSheet.Shapes("Chart 1").ScaleHeight 1.125373487, msoFalse, _
+        msoScaleFromTopLeft
+   Sheets("異常分析-個人進出").Select
+   ActiveSheet.ChartObjects("Chart 1").Delete
+    Sheets("異常分析-部門進出").Select
+    Sheets("異常分析-部門進出").Range("A2:A16,E2:E16").Select
+    Sheets("異常分析-部門進出").Range("E2").Activate
+    ActiveSheet.Shapes.AddChart.Select
+    ActiveChart.ChartType = xlArea
+    ActiveChart.ChartArea.Copy
+    Sheets("圖表分析").Select
+    Sheets("圖表分析").Range("A20").Select
+    ActiveSheet.Paste
+    ActiveWindow.SmallScroll Down:=15
+    ActiveSheet.ChartObjects("Chart 2").Activate
+    ActiveSheet.Shapes("Chart 2").ScaleWidth 1.6, msoFalse, msoScaleFromTopLeft
+    ActiveSheet.Shapes("Chart 2").ScaleHeight 1.3159722222, msoFalse, _
+        msoScaleFromTopLeft
+    ActiveChart.ApplyLayout (1)
+    ActiveSheet.ChartObjects("Chart 2").Activate
+    ActiveChart.ChartTitle.Select
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "部門失敗總數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.ChartTitle.Text = "部門失敗總數"
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "部門失敗總數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.Legend.Select
+    Selection.Delete
+    ActiveSheet.ChartObjects("Chart 2").Activate
+    ActiveChart.Axes(xlValue).AxisTitle.Select
+    Selection.Delete
+    Sheets("異常分析-部門進出").Select
+    ActiveChart.Parent.Delete
+    Sheets("異常分析-測試").Select
+    Sheets("異常分析-測試").Range("G1:I1," & "G" & kkkk + 1 & ":" & "I" & kkkk + 1).Select
+    Sheets("異常分析-測試").Range("G" & kkkk + 1).Activate
+    ActiveSheet.Shapes.AddChart.Select
+    ActiveChart.ChartType = xlPie
+    ActiveChart.ChartArea.Copy
+    Sheets("圖表分析").Select
+    Sheets("圖表分析").Range("N1").Select
+    ActiveSheet.Paste
+    ActiveChart.ApplyLayout (1)
+    ActiveSheet.ChartObjects("Chart 3").Activate
+    ActiveChart.ChartTitle.Select
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "部位失敗次數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+    ActiveChart.ChartTitle.Text = "部位失敗次數"
+    Selection.Format.TextFrame2.TextRange.Characters.Text = "部位失敗次數"
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).ParagraphFormat
+        .TextDirection = msoTextDirectionLeftToRight
+        .Alignment = msoAlignCenter
+    End With
+    With Selection.Format.TextFrame2.TextRange.Characters(1, 6).Font
+        .BaselineOffset = 0
+        .Bold = msoTrue
+        .NameComplexScript = "+mn-cs"
+        .NameFarEast = "+mn-ea"
+        .Fill.Visible = msoTrue
+        .Fill.ForeColor.RGB = RGB(0, 0, 0)
+        .Fill.Transparency = 0
+        .Fill.Solid
+        .Size = 18
+        .Italic = msoFalse
+        .Kerning = 12
+        .name = "+mn-lt"
+        .UnderlineStyle = msoNoUnderline
+        .Strike = msoNoStrike
+    End With
+   Sheets("異常分析-測試").Select
+   ActiveChart.Parent.Delete
+   Sheets("計算用").Select
+   ActiveWindow.SelectedSheets.Visible = False
+   Sheets("圖表分析").Select
+   Sheets("圖表分析").Range("M1").Select
+   Application.ScreenUpdating = True
+    Application.DisplayAlerts = True
+    Application.DisplayStatusBar = True
+    ActiveSheet.DisplayPageBreaks = False
+  
+   MsgBox "執行時間 " & Timer - Time0 & " 秒"
+End Sub
