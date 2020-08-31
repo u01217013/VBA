@@ -1,0 +1,1447 @@
+Private Sub CommandButton1_Click()
+URL = "http://w3.adlinktech.com/lc/Public/SCHEDULE/板階%20-%20SMT%20&%20DIP/SMT新版排程.xlsx"
+Set IE = CreateObject("Internetexplorer.Application")
+With IE
+.Visible = True
+.navigate URL
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{A}"     ' <alt-A> 按[另存新檔]鍵
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{N}"     ' <alt-N> 選取[檔案名稱]欄位
+    Application.SendKeys "{HOME}" & "\"   ' 設定存檔路徑
+    Application.SendKeys "%{S}"     ' <alt-S> 按[存檔]鍵
+    
+    ' 回應[確認另存新檔]視窗
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{Y}"     ' <alt-Y> 按[是]鍵 (如果同名檔已經存在)
+    
+    ' 回應[檢視下載]視窗
+    Application.Wait Now + TimeValue("0:00:5") '延遲5秒
+    Application.SendKeys "%{C}"     ' <alt-C> 按[關閉]鍵
+End With
+
+tURL = "http://w3.adlinktech.com/lc/Public/SCHEDULE/板階%20-%20SMT%20&%20DIP/DIP新版排程.xlsx"
+Set IE = CreateObject("Internetexplorer.Application")
+With IE
+.Visible = True
+.navigate tURL
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{A}"     ' <alt-A> 按[另存新檔]鍵
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{N}"     ' <alt-N> 選取[檔案名稱]欄位
+    Application.SendKeys "{HOME}" & "\"   ' 設定存檔路徑
+    Application.SendKeys "%{S}"     ' <alt-S> 按[存檔]鍵
+    
+    ' 回應[確認另存新檔]視窗
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{Y}"     ' <alt-Y> 按[是]鍵 (如果同名檔已經存在)
+    
+    ' 回應[檢視下載]視窗
+    Application.Wait Now + TimeValue("0:00:5") '延遲5秒
+    Application.SendKeys "%{C}"     ' <alt-C> 按[關閉]鍵
+End With
+
+ttURL = "http://w3.adlinktech.com/lc/Public/SCHEDULE/板階%20-%20Testing/ProductionSchedule-TEST.xls"
+Set IE = CreateObject("Internetexplorer.Application")
+With IE
+.Visible = True
+.navigate ttURL
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{A}"     ' <alt-A> 按[另存新檔]鍵
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{N}"     ' <alt-N> 選取[檔案名稱]欄位
+    Application.SendKeys "{HOME}" & "\"   ' 設定存檔路徑
+    Application.SendKeys "%{S}"     ' <alt-S> 按[存檔]鍵
+    
+    ' 回應[確認另存新檔]視窗
+    Application.Wait Now + TimeValue("0:00:3") '延遲2秒
+    Application.SendKeys "%{Y}"     ' <alt-Y> 按[是]鍵 (如果同名檔已經存在)
+    
+    ' 回應[檢視下載]視窗
+    Application.Wait Now + TimeValue("0:00:15") '延遲15秒
+    Application.SendKeys "%{C}"     ' <alt-C> 按[關閉]鍵
+     MsgBox "已完成，請執行下一步"
+End With
+End Sub
+Private Sub CommandButton2_Click()
+Time0 = Timer '計算執行時間
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    Application.DisplayStatusBar = False
+    ActiveSheet.DisplayPageBreaks = False
+    Dim a As Variant
+    Dim lastrow As Long, lastrow1 As Long
+    Dim Rng2 As Range, Rng3 As Range
+    Dim Rng As Range, Rng1 As Range
+    a = InputBox("請輸入欲匯入的年月" & vbCrLf & "例如:" & vbCrLf & "2019年1月請輸入201901")
+    If a = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    End If
+    Workbooks.Open "C:\SMT新版排程.xlsx", UpdateLinks:=0 '開檔案且不更新格式
+    Worksheets(a).Select '選擇欲使用的sheet
+    ActiveSheet.Range("AG2").Value = "=IF(LEFT(RC[-23],3)=""59N"",1,0)"
+    ActiveSheet.Range("AG2").Select
+    ActiveSheet.Range("AG2").Copy
+    ActiveSheet.Range("AG2:AG800").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH2").Value = "=IF(RC[-6]=""純SMT"",""純SMT"","""")"
+    ActiveSheet.Range("AH2").Select
+    ActiveSheet.Range("AH2").Copy
+    ActiveSheet.Range("AH2:AH800").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH2:AH800").Select
+    Selection.Copy
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Cells.Select
+    ActiveSheet.Range("F1").Activate
+    Selection.EntireColumn.Hidden = False
+    ActiveSheet.Range("AI1").Select
+    Selection.AutoFilter
+    With ActiveSheet
+    Set Rng2 = .[A1].CurrentRegion
+    Rng2.AutoFilter Field:=1, Criteria1:="0"
+    Set Rng3 = Rng2.SpecialCells(xlCellTypeVisible)
+    Rng2.AutoFilter
+    Rng3.Delete
+    ActiveSheet.Columns("AC:AC").Select
+    Selection.Cut
+    ActiveSheet.Columns("M:M").Select
+    Selection.Insert Shift:=xlToRight
+    ActiveSheet.Range("J1").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("J1:M" & m + 1).Select
+    ActiveSheet.Range("J1:M" & m + 1).Copy
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(a).Select
+    ActiveSheet.Range("I7").Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    mm = Selection.Count
+    ActiveSheet.Range("L7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    ActiveSheet.Range("AG7").Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("Q7").Select
+    ActiveSheet.Range("Q7").Value = "=VLOOKUP(RC[-8],'[SMT新版排程.xlsx]" & a & "'!R1C10:R800C34,25,0)"
+    ActiveSheet.Range("Q7").Select
+    ActiveSheet.Range("Q7").Copy
+    ActiveSheet.Range("Q7:Q" & mm + 6).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("Q7:Q" & mm + 6).Select
+    ActiveSheet.Range("Q7:Q" & mm + 6).Copy
+    ActiveSheet.Range("Q7:Q" & mm + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("SMT新版排程.xlsx").Close SaveChanges:=False
+    Workbooks.Open "C:\DIP新版排程.xlsx", UpdateLinks:=0 '開檔案且不更新格式
+    Worksheets(a).Select
+    ActiveSheet.Range("AF2").Value = "=IF(LEFT(RC[-2],4)=""純DIP"",""純DIP"",""NO"")"
+    ActiveSheet.Range("AF2").Copy
+    ActiveSheet.Range("AF2:AF650").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AF2:AF650").Select
+    ActiveSheet.Range("AF2:AF650").Copy
+    ActiveSheet.Range("AF2:AF650").Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Cells.Select
+    ActiveSheet.Range("F1").Activate
+    Selection.EntireColumn.Hidden = False
+    ActiveSheet.Range("AG1").Select
+    Selection.AutoFilter '篩選
+    With ActiveSheet
+    Set Rng = .[A1].CurrentRegion
+    Rng.AutoFilter Field:=27, Criteria1:="NO"
+    Set Rng1 = Rng.SpecialCells(xlCellTypeVisible)
+    Rng.AutoFilter
+    Rng1.Delete '將NO的資料列全部刪除
+    ActiveSheet.Range("I1:K1").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(a).Select
+    ActiveSheet.Range("I" & mm + 7).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    Workbooks(2).Sheets(a).Select
+    ActiveSheet.Range("AD1").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(a).Select
+    ActiveSheet.Range("Q" & mm + 7).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("DIP新版排程.xlsx").Close SaveChanges:=False
+    Workbooks.Open "C:\DIP新版排程.xlsx", UpdateLinks:=0
+    Worksheets(a).Select
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(a).Select
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    mmm = Selection.Count
+    ActiveSheet.Range("AH7").Value = "=VLOOKUP(RC[-25],'[DIP新版排程.xlsx]" & a & "'!R2C9:R800C27,19,0)"
+    ActiveSheet.Range("AH7").Select
+    ActiveSheet.Range("AH7").Copy
+    ActiveSheet.Range("AH7:AH" & mmm + 6).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH7:AH" & mmm + 6).Select
+    ActiveSheet.Range("AH7:AH" & mmm + 6).Copy
+    ActiveSheet.Range("AH7:AH" & mmm + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("DIP新版排程.xlsx").Close SaveChanges:=False
+    Application.ScreenUpdating = True
+    Application.DisplayAlerts = True
+    Application.DisplayStatusBar = True
+    ActiveSheet.DisplayPageBreaks = False
+    MsgBox "執行時間 " & Timer - Time0 & " 秒"
+    End With
+    End With
+End Sub
+Private Sub CommandButton3_Click()
+Time0 = Timer '計算執行時間
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    Application.DisplayStatusBar = False
+    ActiveSheet.DisplayPageBreaks = False
+    Dim b As Variant
+    b = InputBox("請輸入欲匯入的年月" & vbCrLf & "例如:" & vbCrLf & "2019年1月請輸入201901")
+    If b = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    End If
+    Dim a As Variant
+    a = InputBox("請輸入欲查詢的週別名稱" & vbCrLf & "請注意，若sheet名稱改變，請通知程式撰寫人員" & vbCrLf & "查詢第一週請輸入1")
+    If a = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    End If
+    Workbooks.Open "C:\ProductionSchedule-TEST.xls", UpdateLinks:=0
+    Workbooks("ProductionSchedule-TEST.xls").Activate
+    Select Case a
+    Case 1
+    Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m111 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Worksheets("W" & "0" & a + 4 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + m111 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    Case 2
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m2 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Worksheets("W" & "0" & a + 4 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + m2 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+   
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+
+    Case 3
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m2 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Worksheets("W" & "0" & a + 4 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + m2 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    Case 4
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m2 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Worksheets("W" & "0" & a + 4 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + m2 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+
+    Case 5
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m2 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Worksheets("W" & "0" & a + 4 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + m2 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    Case 6
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    
+    
+    Case 7
+       Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 2 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    
+    Case 8
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & "0" & a + 1 & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    
+    Case 9
+        Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & "0" & a & ".").Select
+    
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse - 1).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+    
+    Case Else
+    Workbooks("ProductionSchedule-TEST.xls").Activate
+    Workbooks("ProductionSchedule-TEST.xls").Sheets.Add After:=Sheets(Sheets.Count)
+    Workbooks("ProductionSchedule-TEST.xls").Sheets(Sheets.Count).Name = "計算用"
+    Worksheets("W" & a & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A1").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & a + 1 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m1 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & a + 2 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    m11 = Selection.Count
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("W" & a + 3 & ".").Select
+    ActiveSheet.Rows("1:1").Select
+    ActiveSheet.Rows("1:1").Delete
+    ActiveSheet.Range("H2").Value = "=IF(LEFT(RC[-1],3)=""59N"",""59N"",""NO"")"
+    ActiveSheet.Range("H2").Select
+    ActiveSheet.Range("H2").Copy
+    ActiveSheet.Range("H2:H350").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("$A$1:$AW$165").AutoFilter Field:=8, Criteria1:="NO"
+    ActiveSheet.Rows("2:350").Select
+    Application.CutCopyMode = False
+    Selection.Delete Shift:=xlUp
+    Selection.AutoFilter
+    ActiveSheet.Range("G2:Q2").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    Selection.Copy
+    Worksheets("計算用").Select
+    Worksheets("計算用").Range("A" & m + m1 + m11 + 1).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(1).Activate
+    Workbooks(1).Sheets(b).Select
+    ActiveSheet.Range("AJ7").Value = "=VLOOKUP(RC[-27],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,5,0)"
+    ActiveSheet.Range("AK7").Value = "=VLOOKUP(RC[-28],'[ProductionSchedule-TEST.xls]計算用'!C1:C11,11,0)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    numberelse = Selection.Count
+    ActiveSheet.Range("AJ7:AK7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(numberelse - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ7:AK" & numberelse + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AJ7:AK" & numberelse + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("ProductionSchedule-TEST.xls").Close SaveChanges:=False
+End Select
+    
+    Workbooks.Open "\\Adlink-fs3\IE\Public\Ivy\59N\59n.xls", UpdateLinks:=0 '抓59N
+    Workbooks(1).Activate
+    Worksheets(b).Select
+    ActiveSheet.Range("M7").Value = "=VLOOKUP(RC[-4],'[59n.xls]Detail'!R1C1:R65536C256,8,FALSE)"
+    ActiveSheet.Range("N7").Value = "=VLOOKUP(RC[-5],'[59n.xls]Detail'!R1C1:R65536C256,4,FALSE)"
+    ActiveSheet.Range("I7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    number1 = Selection.Count
+    ActiveSheet.Range("M7:N7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("M7:N" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("M7:N" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("S7").Value = "=VLOOKUP(RC[-10],'[59n.xls]Detail'!R1C1:R65536C256,9,FALSE)"
+    ActiveSheet.Range("T7").Value = "=VLOOKUP(RC[-11],'[59n.xls]Detail'!R1C1:R65536C256,10,FALSE)"
+    ActiveSheet.Range("S7:T7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("S7:T" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("S7:T" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AS7").Value = "=VLOOKUP(RC[-36],'[59n.xls]Detail'!R1C1:R65536C256,7,FALSE)"
+    ActiveSheet.Range("AT7").Value = "=VLOOKUP(RC[-37],'[59n.xls]Detail'!R1C1:R65536C256,8,FALSE)"
+    ActiveSheet.Range("AS7:AT7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AS7:AT" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AS7:AT" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AW7").Value = "=VLOOKUP(RC[-40],'[59n.xls]Detail'!R1C1:R65536C256,5,FALSE)"
+    ActiveSheet.Range("AW7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AW7:AW" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AW7:AW" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AY7").Value = "=VLOOKUP(RC[-42],'[59n.xls]Detail'!R1C1:R65536C256,10,FALSE)"
+    ActiveSheet.Range("AY7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AY7:AY" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AY7:AY" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("D7").Value = "=IF(R[1]C[16]>5,""v"","""")"
+    ActiveSheet.Range("E7").Value = "=IF(AND(R[1]C[15]>3,R[1]C[15]<=5),""v"","""")"
+    ActiveSheet.Range("F7").Value = "=IF(AND(R[1]C[14]>2.5,R[1]C[14]<=3),""v"","""")"
+    ActiveSheet.Range("G7").Value = "=IF(AND(R[1]C[13]>=0.01,R[1]C[13]<=2.5),""v"","""")"
+    ActiveSheet.Range("H7").Value = "=IF(AND(R[1]C[12]>=0.01,R[1]C[12]<=2),""v"","""")"
+    ActiveSheet.Range("D7:H7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("D7:H" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("D7:H" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("P7").Value = "=IF(ISERROR(R[1]C[-2]/R[1]C[-1]),"" "",R[1]C[-2]-R[1]C[-1])"
+    ActiveSheet.Range("P7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("P7:P" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("P7:P" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("R7").Value = "=IF(R[1]C[-5]=0,"" "",R[1]C[-5]-R[1]C[-6])"
+    ActiveSheet.Range("R7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("R7:R" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("R7:R" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("U7").Value = "=IFERROR(VLOOKUP(R[1]C[-12],'未達標工單 '!R2C2:R5340C22,14,FALSE),R[1]C[-1])"
+    ActiveSheet.Range("U7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("U7:U" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("U7:U" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AU7").Value = "=(NOW()-R[1]C[-2])*1440/60/24"
+    ActiveSheet.Range("AV7").Value = "=IF(R[1]C[-2]=0,""X"",R[1]C[-2]-R[1]C[-3])"
+    ActiveSheet.Range("AU7:AV7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AU7:AV" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AU7:AV" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AX7").Value = "=IF(R[1]C[1]=0,R[1]C[-3]-8,R[1]C[1])"
+    ActiveSheet.Range("AX7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AX7:AX" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AX7:AX" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("AZ7").Value = "=60-R[1]C[-2]*24"
+    ActiveSheet.Range("BA7").Value = "=R[1]C[-8]+2.5"
+    ActiveSheet.Range("AZ7:BA7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AZ7:BA" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("AZ7:BA" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    ActiveSheet.Range("BE7").Value = "=IF((R[1]C[-23]-R[1]C[-24])>1,""X"","""")"
+    ActiveSheet.Range("BF7").Value = "=IF((R[1]C[3]-R[1]C[-24])>1,""X"","""")"
+    ActiveSheet.Range("BG7").Value = "=IF(R[1]C[3]="""",R[1]C[2]-R[1]C[-26],R[1]C[3]-R[1]C[-26])"
+    ActiveSheet.Range("BH7").Value = "=IF((R[1]C[-46]*R[1]C[-23])>1440,R[1]C[-46]*R[1]C[-23]/60,"" "")"
+    ActiveSheet.Range("BI7").Value = "=TEXT(IFERROR(IF(FIND(""~"",R[1]C[-25]),LEFT(R[1]C[-25],FIND(""~"",R[1]C[-25])-1)),LEFT(R[1]C[-25],LEN(R[1]C[-25]))),""M/D"")"
+    ActiveSheet.Range("BJ7").Value = "=IF(ISERROR(FIND(""~"",R[1]C[-26])),"""",MID(R[1]C[-26],FIND(""~"",R[1]C[-26])+1,LEN(R[1]C[-26])-FIND(""~"",R[1]C[-26])))"
+    ActiveSheet.Range("BE7:BJ7").Select
+    Selection.Copy
+    ActiveSheet.Range(Selection, Selection.Offset(number1 - 1, 0)).Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("BE7:BJ" & number1 + 6).Select
+    Selection.Copy
+    ActiveSheet.Range("BE7:BJ" & number1 + 6).Select
+    Selection.PasteSpecial xlPasteValues
+    Workbooks("59n.xls").Close SaveChanges:=False
+    Workbooks(1).Activate
+    Worksheets(b).Select
+    Application.ScreenUpdating = True
+    Application.DisplayAlerts = True
+    Application.DisplayStatusBar = True
+    ActiveSheet.DisplayPageBreaks = False
+    MsgBox "執行時間 " & Timer - Time0 & " 秒"
+End Sub
