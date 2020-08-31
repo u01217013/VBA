@@ -1,0 +1,2079 @@
+Private Sub CommandButton1_Click()
+    Dim A As Variant, B As Variant, C As Variant, D As Variant, E As Variant, F As Variant
+    A = InputBox("請輸入欲查詢的年份" & vbCrLf & "例如:" & vbCrLf & "2019年請輸入2019")
+    If A = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    B = InputBox("請輸入欲查詢的月份" & vbCrLf & "例如:" & vbCrLf & "1月請輸入1、2月請輸入2", "匯入TRX資料")
+    If B = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    C = InputBox("請輸入欲查詢的開始日期" & vbCrLf & "例如:" & vbCrLf & "7月24開始，請輸入24")
+        If C = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    E = InputBox("請輸入欲查詢的結束日期" & vbCrLf & "例如:" & vbCrLf & "7月30結束，請輸入30")
+        If E = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    End If
+    End If
+    End If
+    End If
+     MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+      ThisWorkbook.Activate
+      Worksheets("SFF").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+              Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("18").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("SFF").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-" & B & "月份 " & "SFF" & "*" '開檔案
+    Worksheets("SFF" & " 日班點名表").Select
+    Worksheets("SFF" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("SFF" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("G4").Value = "=TRIM(R[-2]C)"               '整理報表成需要格式
+    ActiveSheet.Range("G4").Select
+    ActiveSheet.Range("G4").Copy
+    ActiveSheet.Range("G4:CU4").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("G5").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("G5").Select
+    ActiveSheet.Range("G5").Copy
+    ActiveSheet.Range("G5:AG5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH5").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AH5").Select
+    ActiveSheet.Range("AH5").Copy
+    ActiveSheet.Range("AH5:CU5").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOOOOOOO = Selection.Count
+    Dim myrange As Range
+    Set myrange = ActiveSheet.Rows("5").Find(what:=C, LookIn:=xlValues)
+    myrange.Select
+    M = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourrange As Range
+    Set yourrange = ActiveSheet.Rows("5").Find(what:=E, LookIn:=xlValues)
+    yourrange.Select
+    N = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(M, N).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOOOOOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim Findvaalue As Range
+    Set Findvaalue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    Findvaalue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number222 = Selection.Count
+    Set Findvalllllluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number222 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("SFF").Cells.Select
+    Worksheets("SFF").Cells.EntireRow.AutoFit
+    
+
+    ThisWorkbook.Activate
+      Worksheets("Package").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("Package").Rows("17").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+              Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("17").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("Package").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-" & B & "月份 " & "包裝" & "*" '開檔案
+    Worksheets("包裝" & " 日班點名表").Select
+    Worksheets("包裝" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("包裝" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("G4").Value = "=TRIM(R[-2]C)"               '整理報表成需要格式
+    ActiveSheet.Range("G4").Select
+    ActiveSheet.Range("G4").Copy
+    ActiveSheet.Range("G4:CU4").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("G5").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("G5").Select
+    ActiveSheet.Range("G5").Copy
+    ActiveSheet.Range("G5:AG5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH5").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AH5").Select
+    ActiveSheet.Range("AH5").Copy
+    ActiveSheet.Range("AH5:CU5").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    Dim XXXX As Range
+    Set XXXX = ActiveSheet.Rows("5").Find(what:=C, LookIn:=xlValues)
+    XXXX.Select
+    MM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youurrange As Range
+    Set youurrange = ActiveSheet.Rows("5").Find(what:=E, LookIn:=xlValues)
+    youurrange.Select
+    NN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MM, NN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(15, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下一格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.Offset(15, 0)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number22 = Selection.Count
+    Set Findvallllluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number22 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("Package").Cells.Select
+    Worksheets("Package").Cells.EntireRow.AutoFit
+    
+
+     ThisWorkbook.Activate
+      Worksheets("100G SR4").Select
+       For I = 1 To 35
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("100G SR4").Rows("25").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("25").Select '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("25").Select '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("25").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("25").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("25").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("100G SR4").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-" & B & "月份 " & "100G" & "*" '開檔案
+    Worksheets("C-AOC 日班點名表").Select
+    Worksheets("C-AOC 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("C-AOC 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("G4").Value = "=TRIM(R[-2]C)"               '整理報表成需要格式
+    ActiveSheet.Range("G4").Select
+    ActiveSheet.Range("G4").Copy
+    ActiveSheet.Range("G4:CU4").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("G5").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("G5").Select
+    ActiveSheet.Range("G5").Copy
+    ActiveSheet.Range("G5:AG5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH5").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AH5").Select
+    ActiveSheet.Range("AH5").Copy
+    ActiveSheet.Range("AH5:CU5").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOOOOO = Selection.Count
+    Dim PPPP As Range
+    Set PPPP = ActiveSheet.Rows("5").Find(what:=C, LookIn:=xlValues)
+    PPPP.Select
+    MMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuurrange As Range
+    Set youuurrange = ActiveSheet.Rows("5").Find(what:=E, LookIn:=xlValues)
+    youuurrange.Select
+    NNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMM, NNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOOOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number13 = Selection.Count
+     Set Findvalllluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number13 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("100G SR4").Cells.Select
+    Worksheets("100G SR4").Cells.EntireRow.AutoFit
+    
+    
+
+    ThisWorkbook.Activate
+      Worksheets("3T 3R").Select
+       For I = 1 To 40
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("3T 3R").Rows("22").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("3T 3R").Rows("22").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("3T 3R").Rows("22").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("3T 3R").Rows("22").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("3T 3R").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-" & B & "月份 " & "3T&3R" & "*" '開檔案
+    Worksheets("3T&3R" & " 日班點名表").Select
+    Worksheets("3T&3R" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("3T&3R" & " 日班點名表").Rows("4").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("H4").Value = "=TRIM(R[-2]C)"               '整理報表成需要格式
+    ActiveSheet.Range("H4").Select
+    ActiveSheet.Range("H4").Copy
+    ActiveSheet.Range("H4:CV4").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("H5").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("H5").Select
+    ActiveSheet.Range("H5").Copy
+    ActiveSheet.Range("H5:AH5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AI5").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AI5").Select
+    ActiveSheet.Range("AI5").Copy
+    ActiveSheet.Range("AI5:CV5").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOOOO = Selection.Count
+    Dim myre As Range
+    Set myre = ActiveSheet.Rows("5").Find(what:=C, LookIn:=xlValues)
+    myre.Select
+    MMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuurrange As Range
+    Set youuuurrange = ActiveSheet.Rows("5").Find(what:=E, LookIn:=xlValues)
+    youuuurrange.Select
+    NNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMM, NNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C6").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number123 = Selection.Count
+    Set Findvallluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number123 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("3T 3R").Cells.Select
+    Worksheets("3T 3R").Cells.EntireRow.AutoFit
+
+    ThisWorkbook.Activate
+    Worksheets("CWDM4").Select
+    For I = 1 To 40
+    Rows(I).EntireRow.Hidden = False
+    Next I
+      Worksheets("CWDM4").Rows("34").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+
+    Worksheets("CWDM4").Rows("34").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-B-LINE CWDM4-(" & B & "月)" & "昭銘" & "*"
+    Worksheets("B-CWDM4 日班點名表").Select
+    Worksheets("B-CWDM4 日班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("B-CWDM4 日班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("H5").Value = "=TEXT(R[-3]C,""d"")"               '整理報表成需要格式
+    ActiveSheet.Range("H5").Select
+    ActiveSheet.Range("H5").Copy
+    ActiveSheet.Range("H5:CV5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("H6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("H6").Select
+    ActiveSheet.Range("H6").Copy
+    ActiveSheet.Range("H6:AH6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AI6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AI6").Select
+    ActiveSheet.Range("AI6").Copy
+    ActiveSheet.Range("AI6:CV6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("B7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOOO = Selection.Count
+    Dim my As Range
+    Set my = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    my.Select
+    MMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuurrange As Range
+    Set youuuuurrange = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuurrange.Select
+    NNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMM, NNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("B7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number12 = Selection.Count
+    Set Findvalluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number12 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("CWDM4").Cells.Select
+    Worksheets("CWDM4").Cells.EntireRow.AutoFit
+    
+    
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+    ThisWorkbook.Activate
+    Worksheets("CWDM4").Select
+    For I = 1 To 40
+    Rows(I).EntireRow.Hidden = False
+    Next I
+      Worksheets("CWDM4").Rows("34").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select '插入空白列
+              Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("34").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+    Worksheets("CWDM4").Rows("34").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("CWDM4").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-B-LINE CWDM4-(" & B & "月)" & "志恒" & "*"
+    Worksheets("B-CWDM4 夜班點名表").Select
+    Worksheets("B-CWDM4 夜班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("B-CWDM4 夜班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("H5").Value = "=TEXT(R[-3]C,""d"")"               '整理報表成需要格式
+    ActiveSheet.Range("H5").Select
+    ActiveSheet.Range("H5").Copy
+    ActiveSheet.Range("H5:CV5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("H6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("H6").Select
+    ActiveSheet.Range("H6").Copy
+    ActiveSheet.Range("H6:AH6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AI6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AI6").Select
+    ActiveSheet.Range("AI6").Copy
+    ActiveSheet.Range("AI6:CV6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("C7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOO = Selection.Count
+    Dim ange As Range
+    Set ange = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    ange.Select
+    MMMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuuurrange As Range
+    Set youuuuuurrange = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuuurrange.Select
+    NNNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMMM, NNNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(19, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(19, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number111 = Selection.Count
+    Set Findvaluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(19, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number111 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("CWDM4").Cells.Select
+    Worksheets("CWDM4").Cells.EntireRow.AutoFit
+    
+    
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+    ThisWorkbook.Activate
+    Worksheets("MPO").Select
+    For I = 1 To 40
+    Rows(I).EntireRow.Hidden = False
+    Next I
+      Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("MPO").Rows("51").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("MPO").Rows("51").Select '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("MPO").Rows("51").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("MPO").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\TRX-G-LINE  MPO-(" & B & "月)" & "*"
+    Worksheets("MPO-日班點名表").Select
+    Worksheets("MPO-日班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("MPO-日班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("I5").Value = "=TEXT(R[-3]C,""d"")"               '整理報表成需要格式
+    ActiveSheet.Range("I5").Select
+    ActiveSheet.Range("I5").Copy
+    ActiveSheet.Range("I5:CW5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("I6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("I6").Select
+    ActiveSheet.Range("I6").Copy
+    ActiveSheet.Range("I6:AI6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AJ6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AJ6").Select
+    ActiveSheet.Range("AJ6").Copy
+    ActiveSheet.Range("AJ6:CW6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("D7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOWOWO = Selection.Count
+    Dim rang As Range
+    Set rang = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    rang.Select
+    MMMMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuuuurrange As Range
+    Set youuuuuuurrange = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuuuurrange.Select
+    NNNNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMMMM, NNNNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOWOWO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("D7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set Findvaluuueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Worksheets("MPO").Cells.Select
+    Worksheets("MPO").Cells.EntireRow.AutoFit
+    
+    
+    Workbooks(2).Activate
+    Worksheets("J-MPO-夜班點名表").Select
+    Worksheets("J-MPO-夜班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("J-MPO-夜班點名表").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("H5").Value = "=TEXT(R[-3]C,""d"")"               '整理報表成需要格式
+    ActiveSheet.Range("H5").Select
+    ActiveSheet.Range("H5").Copy
+    ActiveSheet.Range("H5:CV5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("H6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("H6").Select
+    ActiveSheet.Range("H6").Copy
+    ActiveSheet.Range("H6:AI6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AH6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AH6").Select
+    ActiveSheet.Range("AH6").Copy
+    ActiveSheet.Range("AH6:CV6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("C7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOWOWOWO = Selection.Count
+    Dim rangg As Range
+    Set rangg = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    rangg.Select
+    MMMMMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuuuuurrange As Range
+    Set youuuuuuuurrange = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuuuuurrange.Select
+    NNNNNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMMMMM, NNNNNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOWOWOWO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(36, 0).Select '從上面指定的儲存格向下36格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("C7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(36, -2).Select '從上面指定的儲存格向下36格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number11 = Selection.Count
+    Set Findvaluueee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(36, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number11 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("MPO").Cells.Select
+    Worksheets("MPO").Cells.EntireRow.AutoFit
+    
+    
+    ThisWorkbook.Activate
+    Worksheets("一部維修").Select
+    For I = 1 To 30
+    Rows(I).EntireRow.Hidden = False
+    Next I
+      Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+            Worksheets("一部維修").Rows("29").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+
+      Worksheets("一部維修").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\TRx\11.各課資料key in(點名表&工時&排程)\0.產線人員出缺勤\" & A & "\【" & A & "】各產線人員出勤- " & B & "月\" & "維修一課" & "*"
+    Worksheets("維修日班").Select
+    Worksheets("維修日班").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("維修日班").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("F5").Value = "=TRIM(R[-3]C)"                '整理報表成需要格式
+    ActiveSheet.Range("F5").Select
+    ActiveSheet.Range("F5").Copy
+    ActiveSheet.Range("F5:CT5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("F6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("F6").Select
+    ActiveSheet.Range("F6").Copy
+    ActiveSheet.Range("F6:AF6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AG6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AG6").Select
+    ActiveSheet.Range("AG6").Copy
+    ActiveSheet.Range("AG6:CT6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("B7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WO = Selection.Count
+    Dim mrange As Range
+    Set mrange = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    mrange.Select
+    MMMMMMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuuuuurrrange As Range
+    Set youuuuuuuurrrange = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuuuuurrrange.Select
+    NNNNNNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMMMMMM, NNNNNNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("B7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set Findvaluuee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+
+    Workbooks(2).Activate
+    Worksheets("維修夜班").Select
+    Worksheets("維修夜班").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    Worksheets("維修夜班").Rows("5").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("F5").Value = "=TRIM(R[-3]C)"                '整理報表成需要格式
+    ActiveSheet.Range("F5").Select
+    ActiveSheet.Range("F5").Copy
+    ActiveSheet.Range("F5:CT5").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("F6").Value = "=LEFT(R[-1]C,1)"
+    ActiveSheet.Range("F6").Select
+    ActiveSheet.Range("F6").Copy
+    ActiveSheet.Range("F6:AF6").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("AG6").Value = "=LEFT(R[-1]C,2)"
+    ActiveSheet.Range("AG6").Select
+    ActiveSheet.Range("AG6").Copy
+    ActiveSheet.Range("AG6:CT6").Select
+    Selection.PasteSpecial      '整理報表成需要格式
+    ActiveSheet.Range("E7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    WOZ = Selection.Count
+    Dim mrangeZ As Range
+    Set mrangeZ = ActiveSheet.Rows("6").Find(what:=C, LookIn:=xlValues)
+    mrangeZ.Select
+    MMMMMMMMMZ = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim youuuuuuuurrrangeZ As Range
+    Set youuuuuuuurrrangeZ = ActiveSheet.Rows("6").Find(what:=E, LookIn:=xlValues)
+    youuuuuuuurrrangeZ.Select
+    NNNNNNNNNZ = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMMMMMMZ, NNNNNNNNNZ).Select
+    ActiveSheet.Range(Selection, Selection.Offset(WOZ, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("E7").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection.Offset(0, -3), Selection.Offset(0, -2)).Select
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set Findvaluuee = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+    Workbooks(2).Close SaveChanges:=False
+    Worksheets("一部維修").Cells.Select
+    Worksheets("一部維修").Cells.EntireRow.AutoFit
+    MsgBox "已完成，請確認排版與人數"
+End Sub
+
+Private Sub CommandButton2_Click()
+Dim A As Variant, B As Variant, C As Variant, D As Variant, E As Variant, F As Variant
+    A = InputBox("請輸入欲查詢的年份" & vbCrLf & "例如:" & vbCrLf & "2019年請輸入2019")
+    If A = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    B = InputBox("請輸入欲查詢的月份" & vbCrLf & "例如:" & vbCrLf & "1月請輸入1、2月請輸入2", "匯入LE資料")
+    If B = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    C = InputBox("請輸入欲查詢的開始日期" & vbCrLf & "例如:" & vbCrLf & "7月24開始，請輸入24")
+        If C = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    Else
+    E = InputBox("請輸入欲查詢的結束日期" & vbCrLf & "例如:" & vbCrLf & "7月30結束，請輸入30")
+        If E = "" Then
+    MsgBox "輸入資料有誤，請重新輸入"
+    Exit Sub
+    End If
+    End If
+    End If
+    End If
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+      ThisWorkbook.Activate
+      Worksheets("BOSA").Select
+       For I = 1 To 195
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列 Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+       Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("178").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOSA").Rows("178").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOSA").Rows("178").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOSA").Rows("178").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets("BOSA").Rows("178").Select  '插入空白列
+              Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets("BOSA").Rows("178").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets("BOSA").Rows("178").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOSA").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【BOSA】- " & B & "*" '開檔案
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWO = Selection.Count
+    Dim myrange As Range
+    Set myrange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    myrange.Select
+    M = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourrange As Range
+    Set yourrange = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourrange.Select
+    N = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(M, N).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim Findvaalue As Range
+    Set Findvaalue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    Findvaalue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOO = Selection.Count
+    Dim myraange As Range
+    Set myraange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    myraange.Select
+    M = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourraange As Range
+    Set yourraange = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourraange.Select
+    N = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(M, N).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim Findvaaalue As Range
+    Set Findvaaalue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    Findvaaalue.Select  '選取該儲存格
+    F = Selection.Offset(110, 0).Select '從上面指定的儲存格向下110格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(110, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number1 = Selection.Count
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(110, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number1 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+    Worksheets("BOSA").Cells.Select
+    Worksheets("BOSA").Cells.EntireRow.AutoFit
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+          ThisWorkbook.Activate
+      Worksheets("BOX.T").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("31").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOX.T").Rows("31").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BOX.T").Rows("31").Select  '插入空白列
+             Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BOX.T").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【BOX TOSA】-" & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOO = Selection.Count
+    Dim myrangee As Range
+    Set myrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    myrangee.Select
+    MM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourrangge As Range
+    Set yourrangge = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourrangge.Select
+    NN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MM, NN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim Findvaaluue As Range
+    Set Findvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    Findvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOOO = Selection.Count
+    Dim myyyyraanange As Range
+    Set myyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    myyyyraanange.Select
+    MMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourraangee As Range
+    Set yourraangee = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourraangee.Select
+    NNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMM, NNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim Findvaaalueee As Range
+    Set Findvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    Findvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(20, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number21 = Selection.Count
+    Set Findvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number21 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+    Worksheets("BOX.T").Cells.Select
+    Worksheets("BOX.T").Cells.EntireRow.AutoFit
+    
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+          ThisWorkbook.Activate
+      Worksheets("BTF").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("BTF").Rows("15").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("BTF").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【BTF】-" & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWAW = Selection.Count
+    Dim mymyrangee As Range
+    Set mymyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    mymyrangee.Select
+    MMY = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yououourrangge As Range
+    Set yououourrangge = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yououourrangge.Select
+    NNY = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMY, NNY).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWAW, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim FFindvaaluue As Range
+    Set FFindvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    FFindvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set FFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set FFFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWAWO = Selection.Count
+    If AWAWO > 100 Then
+     Workbooks(2).Close SaveChanges:=False
+     ThisWorkbook.Activate
+     MsgBox "無此次夜班搜尋資料"
+     Else
+    Dim mOOyyyyraanange As Range
+    Set mOOyyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+     If mOOyyyyraanange Is Nothing Then
+     Workbooks(2).Close SaveChanges:=False
+     ThisWorkbook.Activate
+     MsgBox "無此次搜尋資料"
+     Else
+     mOOyyyyraanange.Select
+    MMMMT = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yoourraangee As Range
+    Set yoourraangee = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yoourraangee.Select
+    NNNNT = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMMMT, NNNNT).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWAWO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim FIindvaaalueee As Range
+    Set FIindvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    FIindvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(15, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set FIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(15, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number22 = Selection.Count
+    Set FIIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(15, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number22 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+     End If
+     End If
+    Worksheets("BTF").Cells.Select
+    Worksheets("BTF").Cells.EntireRow.AutoFit
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+      ThisWorkbook.Activate
+      Worksheets(" COB").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+            Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" COB").Rows("27").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets(" COB").Rows("27").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets(" COB").Rows("27").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets(" COB").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【COB】-" & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOOee = Selection.Count
+    Dim myrmyrangee As Range
+    Set myrmyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    myrmyrangee.Select
+    MMmyr = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourranggeAD As Range
+    Set yourranggeAD = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourranggeAD.Select
+    NNmyr = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(MMmyr, NNmyr).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOOee, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim FFiindvaaluue As Range
+    Set FFiindvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    FFiindvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set FiFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set FiFiFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWyyOOO = Selection.Count
+    Dim yymyyyyraanange As Range
+    Set yymyyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    yymyyyyraanange.Select
+    yyMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim yourraangeAe As Range
+    Set yourraangeAe = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    yourraangeAe.Select
+    yyNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(yyMMMM, yyNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWyyOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim yyFindvaaalueee As Range
+    Set yyFindvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    yyFindvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(20, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set Fyyindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number21 = Selection.Count
+    Set Fiyyndvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(20, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number21 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+    Worksheets(" COB").Cells.Select
+    Worksheets(" COB").Cells.EntireRow.AutoFit
+    
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+      ThisWorkbook.Activate
+      Worksheets("MINI TOSA").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("MINI TOSA").Rows("73").Select '插入空白列
+      Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+      Selection.Copy
+      Selection.Insert Shift:=xlDown '插入空白列
+      Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+      Selection.Copy
+      Selection.Insert Shift:=xlDown '插入空白列
+      Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+      Selection.Copy
+      Selection.Insert Shift:=xlDown '插入空白列
+      Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+      Selection.Copy
+      Selection.Insert Shift:=xlDown '插入空白列
+      Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+      Selection.Copy
+     Selection.Insert Shift:=xlDown '插入空白列
+        Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+        Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("MINI TOSA").Rows("73").Select  '插入空白列
+        Selection.Copy
+      Selection.Insert Shift:=xlDown '插入空白列
+      Worksheets("MINI TOSA").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【MINI TOSA】-" & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOOS = Selection.Count
+    Dim Smyrmyrangee As Range
+    Set Smyrmyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    Smyrmyrangee.Select
+    SMMmyr = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim ShyourranggeAD As Range
+    Set ShyourranggeAD = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    ShyourranggeAD.Select
+    SNNmyr = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(SMMmyr, SNNmyr).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOOS, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim FFShiind As Range
+    Set FFShiind = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)  '找到第1列內儲存格值=C的儲存格
+    FFShiind.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set ShFiFind = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set FShiFiFind = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWyyOOO = Selection.Count
+    Dim Shyyraanange As Range
+    Set Shyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    Shyyraanange.Select
+    ShyyM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim ShyourraangeAe As Range
+    Set ShyourraangeAe = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    ShyourraangeAe.Select
+    ShyyN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(ShyyM, ShyyN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWyyOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim indvaaalueee As Range
+    Set indvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    indvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(45, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set FyShyindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(45, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number21 = Selection.Count
+    Set FiShyyndvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(45, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number21 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+    Worksheets("MINI TOSA").Cells.Select
+    Worksheets("MINI TOSA").Cells.EntireRow.AutoFit
+    
+
+      MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+      ThisWorkbook.Activate
+      Worksheets(" MINI sub").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+        Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+               Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+              Worksheets(" MINI sub").Rows("69").Select  '插入空白列
+                 Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets(" MINI sub").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【MINI SUB】- " & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWOOSh = Selection.Count
+    Dim Shmyrmyrangee As Range
+    Set Shmyrmyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    Shmyrmyrangee.Select
+    ShMMmyr = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim rranggeAD As Range
+    Set rranggeAD = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    rranggeAD.Select
+    ShNNmyr = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(ShMMmyr, ShNNmyr).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWOOSh, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim FFShiindvaaluue As Range
+    Set FFShiindvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    FFShiindvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set ShFiFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set FShiFiFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWyyOOO = Selection.Count
+    Dim Shyymyyyyraanange As Range
+    Set Shyymyyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    Shyymyyyyraanange.Select
+    ShyyMMMM = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim Shyourra As Range
+    Set Shyourra = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    Shyourra.Select
+    ShyyNNNN = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(ShyyMMMM, ShyyNNNN).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWyyOOO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim yyFShindvaaalueee As Range
+    Set yyFShindvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    yyFShindvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(50, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set FyShyindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(50, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number21 = Selection.Count
+    Set FiShyyndvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(50, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number21 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+     Worksheets(" MINI sub").Cells.Select
+    Worksheets(" MINI sub").Cells.EntireRow.AutoFit
+    
+ 
+
+    MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+          ThisWorkbook.Activate
+      Worksheets("OSA").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("10").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("OSA").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+        With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【OSA】- " & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    okAWAW = Selection.Count
+    Dim okmymyrangee As Range
+    Set okmymyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    okmymyrangee.Select
+    okMMY = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim okyououourrangge As Range
+    Set okyououourrangge = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    okyououourrangge.Select
+    okNNY = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(okMMY, okNNY).Select
+    ActiveSheet.Range(Selection, Selection.Offset(okAWAW, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim okFFindvaaluue As Range
+    Set okFFindvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    okFFindvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set okFFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set okFFFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWAWOok = Selection.Count
+    If AWAWOok > 100 Then
+     Workbooks(2).Close SaveChanges:=False
+     ThisWorkbook.Activate
+     MsgBox "無此次搜尋資料"
+     Else
+    Dim okmOOyyyyraanange As Range
+    Set okmOOyyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+     okmOOyyyyraanange.Select
+    okMMMMT = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim okyoourraangee As Range
+    Set okyoourraangee = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    okyoourraangee.Select
+    okNNNNT = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(okMMMMT, okNNNNT).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWAWOok, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim okFIindvaaalueee As Range
+    Set okFIindvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    okFIindvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(12, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set okFIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(12, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number22 = Selection.Count
+    Set okFIIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(12, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number22 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+     Worksheets("OSA").Cells.Select
+    Worksheets("OSA").Cells.EntireRow.AutoFit
+     End If
+
+
+        MsgBox "請注意，此次操作需人員點擊部分按鈕。"
+          ThisWorkbook.Activate
+      Worksheets("二部維修").Select
+       For I = 1 To 20
+       Rows(I).EntireRow.Hidden = False
+       Next I
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列列
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+        Worksheets("二部維修").Rows("20").Select  '插入空白列
+                  Selection.Copy
+      Selection.Insert Shift:=xlDowne '插入空白列
+      Worksheets("二部維修").Rows("1").Select
+      Selection.Value = "=TEXT(R[1]C,""yyyymd"")"
+          With Selection.Font
+         .ThemeColor = xlThemeColorDark1
+         .TintAndShade = 0
+          End With
+    Workbooks.Open "Y:\Light Engine\00產線人員出缺勤00\" & A & "年" & B & "月份\【維修】- " & B & "*" '開檔案"
+    Worksheets("日班").Select
+    Worksheets("日班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AAWAW = Selection.Count
+    Dim Amymyrangee As Range
+    Set Amymyrangee = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+    Amymyrangee.Select
+    AMMY = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim Ayououourrangge As Range
+    Set Ayououourrangge = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    Ayououourrangge.Select
+    ANNY = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(AMMY, ANNY).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AAWAW, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim AFFindvaaluue As Range
+    Set AFFindvaaluue = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    AFFindvaaluue.Select  '選取該儲存格
+    F = Selection.Offset(3, 0).Select '從上面指定的儲存格向下3格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set AFFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number = Selection.Count
+    Set AFFFFindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(3, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "日"
+    Workbooks(2).Activate
+    Worksheets("夜班").Select
+    Worksheets("夜班").Rows("7").Select  '插入空白列
+    Selection.Insert Shift:=xlown, CopyOrigin:=xlFormatFromLeftOrAbove '插入空白列
+    ActiveSheet.Range("M7").Value = "=TEXT(R[-2]C,""yyyymd"")"               '整理報表成需要格式
+    ActiveSheet.Range("M7").Select
+    ActiveSheet.Range("M7").Copy
+    ActiveSheet.Range("M7:DA7").Select
+    Selection.PasteSpecial
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select
+    AWAWOPK = Selection.Count
+    If AWAWOPK > 100 Then
+     Workbooks(2).Close SaveChanges:=False
+     ThisWorkbook.Activate
+     MsgBox "無此次搜尋資料"
+     Else
+    Dim AmOOyyyyraanange As Range
+    Set AmOOyyyyraanange = ActiveSheet.Rows("7").Find(what:=(A & B & C), LookIn:=xlValues)
+     If AmOOyyyyraanange Is Nothing Then
+     Workbooks(2).Close SaveChanges:=False
+     ThisWorkbook.Activate
+     MsgBox "無此次搜尋資料"
+     Else
+     AmOOyyyyraanange.Select
+    AMMMMT = Selection.Offset(1, 0).Address '從上面指定的儲存格向下一格
+    Dim Ayoourraangee As Range
+    Set Ayoourraangee = ActiveSheet.Rows("7").Find(what:=(A & B & E), LookIn:=xlValues)
+    Ayoourraangee.Select
+    ANNNNT = Selection.Offset(1, 2).Address
+    ActiveSheet.Range(AMMMMT, ANNNNT).Select
+    ActiveSheet.Range(Selection, Selection.Offset(AWAWO, 0)).Select  '向下選到最後一列
+    Selection.Copy '複製選取範圍
+    ThisWorkbook.Activate
+    Dim AFIindvaaalueee As Range
+    Set AFIindvaaalueee = ActiveSheet.Rows("1").Find(what:=(A & B & C), LookIn:=xlValues)   '找到第1列內儲存格值=C的儲存格
+    AFIindvaaalueee.Select  '選取該儲存格
+    F = Selection.Offset(24, 0).Select '從上面指定的儲存格向下15格
+    Selection.PasteSpecial xlPasteValues
+    Workbooks(2).Activate
+    ActiveSheet.Range("J8").Select
+    ActiveSheet.Range(Selection, Selection.End(xlDown)).Select  '向下選到最後一列
+    ActiveSheet.Range(Selection, Selection.Offset(0, 1)).Select '向右選擇1欄
+    Selection.Copy
+    ThisWorkbook.Activate
+    Set AFIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(24, -2).Select '從上面指定的儲存格向下3格向左2欄
+    Selection.PasteSpecial xlPasteValues
+    Number22 = Selection.Count
+    Set AFIIIindvalue = ActiveSheet.Rows("1").Find(what:=(A & B & C)) '找到第1列內儲存格值=C的儲存格
+    ActiveSheet.Rows("1").Find(what:=(A & B & C)).Select  '選取該儲存格
+    Selection.Offset(24, -3).Select
+    ActiveSheet.Range(Selection, Selection.Offset(Number22 / 2, 0)).Select '向下選到最後一列
+    Selection.Value = "夜"
+     Workbooks(2).Close SaveChanges:=False
+     MsgBox "已完成，請確認排版與人數"
+          Worksheets("二部維修").Cells.Select
+    Worksheets("二部維修").Cells.EntireRow.AutoFit
+     End If
+     End If
+
+End Sub
